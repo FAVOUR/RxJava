@@ -15,6 +15,12 @@ class Observables {
     companion object{
         fun genereateObservable(){
 //         var observable:Observable<Task> = Observable.fromIterable(createTasksList())
+
+            var observable = Observable.create<String>({})
+
+            var thread = Thread{
+
+            }
         Observable.fromIterable(createTasksList())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -32,7 +38,7 @@ class Observables {
 
                 override fun onNext(t: Task) {
 
-                    Log.i("Tasks",)
+                    Log.i("Tasks", t.toString())
                 }
 
                 override fun onError(e: Throwable) {
