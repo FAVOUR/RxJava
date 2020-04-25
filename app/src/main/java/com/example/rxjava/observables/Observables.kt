@@ -1,11 +1,9 @@
 package com.example.rxjava.observables
 
 import android.util.Log
+import com.example.rxjava.model.DataSource
 import com.example.rxjava.model.Task
-import com.example.rxjava.model.createTasksList
-import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.Scheduler
+import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -16,18 +14,25 @@ class Observables {
         fun genereateObservable(){
 //         var observable:Observable<Task> = Observable.fromIterable(createTasksList())
 
-            var observable = Observable.create<String>({})
+            //Three ways to implement and interface in kotlin
+            var observable = Observable.create<String>{ it.onNext("") }
+            var observable_ = Observable.create(object : ObservableOnSubscribe<String>{
+                override fun subscribe(emitter: ObservableEmitter<String>) {
+                    emitter.onNext("")
+                }
+            })
 
-            var thread = Thread{
+            var observable__ = Observable.create(ObservableOnSubscribe<String> { emitter -> emitter.onNext("") })
 
-            }
-        Observable.fromIterable(createTasksList())
+            var thread = Thread()
+        Observable.fromIterable(DataSource().createTasksList())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(generateObserver())
+            .subscribe(generateTaskObserver())
+
         }
 
-        private fun generateObserver():Observer<Task>{
+         fun generateTaskObserver():Observer<Task>{
            return object:Observer<Task>{
                 override fun onComplete() {
 
